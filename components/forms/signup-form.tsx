@@ -169,9 +169,7 @@ export function SignupForm({
                       "Sign up"
                     )}
                   </Button>
-                  <Button variant="outline" type="button">
-                    Login with Google
-                  </Button>
+
                   <FieldDescription className="text-center">
                     Already have an account? <Link href="/login">Login</Link>
                   </FieldDescription>
