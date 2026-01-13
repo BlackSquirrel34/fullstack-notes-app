@@ -1,24 +1,20 @@
 "use server";
 
-import { user } from "@/auth-schema";
 import { db } from "@/db/drizzle";
 import { InsertNotebook, notebooks } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 
-// Create a new notebook
 export const createNotebook = async (values: InsertNotebook) => {
   try {
     await db.insert(notebooks).values(values);
-
     return { success: true, message: "Notebook created successfully" };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to create notebook" };
   }
 };
 
-// fetch notebooks for the logged-in user
 export const getNotebooks = async () => {
   try {
     const session = await auth.api.getSession({
@@ -31,12 +27,15 @@ export const getNotebooks = async () => {
       return { success: false, message: "User not found" };
     }
 
-    const notebooksByUser = await db
-      .select()
-      .from(notebooks)
-      .where(eq(notebooks.userId, userId));
+    const notebooksByUser = await db.query.notebooks.findMany({
+      where: eq(notebooks.userId, userId),
+      with: {
+        notes: true,
+      },
+    });
+
     return { success: true, notebooks: notebooksByUser };
-  } catch (error) {
+  } catch {
     return { success: false, message: "Failed to get notebooks" };
   }
 };
