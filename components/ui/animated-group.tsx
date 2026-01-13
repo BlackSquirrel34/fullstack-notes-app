@@ -19,15 +19,15 @@ export type AnimatedGroupProps = {
   children: ReactNode;
   className?: string;
   variants?: {
-    container?: Variants;
-    item?: Variants;
+    container?: any;
+    item?: any;
   };
   preset?: PresetType;
   as?: React.ElementType;
   asChild?: React.ElementType;
 };
 
-const defaultContainerVariants: Variants = {
+const defaultContainerVariants: any = {
   visible: {
     transition: {
       staggerChildren: 0.1,
@@ -35,12 +35,12 @@ const defaultContainerVariants: Variants = {
   },
 };
 
-const defaultItemVariants: Variants = {
+const defaultItemVariants: any = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
 
-const presetVariants: Record<PresetType, Variants> = {
+const presetVariants: Record<PresetType, any> = {
   fade: {},
   slide: {
     hidden: { y: 20 },
@@ -95,9 +95,9 @@ const presetVariants: Record<PresetType, Variants> = {
   },
 };
 
-const addDefaultVariants = (variants: Variants) => ({
-  hidden: { ...defaultItemVariants.hidden, ...variants.hidden },
-  visible: { ...defaultItemVariants.visible, ...variants.visible },
+const addDefaultVariants = (variants: any) => ({
+  hidden: { ...defaultItemVariants.hidden, ...variants?.hidden },
+  visible: { ...defaultItemVariants.visible, ...variants?.visible },
 });
 
 function AnimatedGroup({
@@ -115,12 +115,9 @@ function AnimatedGroup({
   const containerVariants = variants?.container || selectedVariants.container;
   const itemVariants = variants?.item || selectedVariants.item;
 
-  const MotionComponent = React.useMemo(
-    () => motion.create(as as keyof JSX.IntrinsicElements),
-    [as]
-  );
+  const MotionComponent = React.useMemo(() => motion.create(as as any), [as]);
   const MotionChild = React.useMemo(
-    () => motion.create(asChild as keyof JSX.IntrinsicElements),
+    () => motion.create(asChild as any),
     [asChild]
   );
 
